@@ -221,6 +221,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function() vim.highlight.on_yank() end,
 })
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    group = vim.api.nvim_create_augroup("EslintFixOnSave", { clear = true }),
+    pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
+    command = "silent! EslintFixAll", -- Requires EslintFixAll to be available
+  })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -432,8 +437,8 @@ require("lazy").setup({
       local builtin = require "telescope.builtin"
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-      vim.keymap.set("n", "<leader>sf", builtin.git_files, { desc = "[S]earch [F]iles" })
-      vim.keymap.set("n", "<leader>sF", builtin.find_files, { desc = "[S]earch [F]iles with ignored" })
+      vim.keymap.set("n", "<leader>sF", builtin.git_files, { desc = "[S]earch [F]iles" })
+      vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles with ignored" })
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
       vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
       vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
@@ -710,9 +715,6 @@ require("lazy").setup({
         volar = {
           filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
           init_options = {
-            vue = {
-              hybridMode = false,
-            },
             plugins = {
               -- Global install of typescript
               name = "@vue/typescript-plugin",
@@ -723,7 +725,7 @@ require("lazy").setup({
             },
           },
         },
-
+        ts_ls = {},
         -- tsserver = {
         --   init_options = {
         --     plugins = {
@@ -743,13 +745,13 @@ require("lazy").setup({
         eslint = {
           cmd = { "vscode-eslint-language-server", "--stdio" },
           filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
-          on_attach = function(client)
-            if client.name == "eslint" then
-              client.server_capabilities.documentFormattingProvider = true
-            elseif client.name == "tsserver" then
-              client.server_capabilities.documentFormattingProvider = false
-            end
-          end,
+          -- on_attach = function(client)
+          --   if client.name == "eslint" then
+          --     client.server_capabilities.documentFormattingProvider = true
+          --   elseif client.name == "ts_ls" then
+          --     client.server_capabilities.documentFormattingProvider = false
+          --   end
+          -- end,
         },
         lua_ls = {
           -- cmd = { ... },
@@ -1070,7 +1072,6 @@ require("lazy").setup({
   require "custom.plugins.vim-visual-multi",
   require "custom.plugins.dadbod",
   require "custom.plugins.git-conflict",
-
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
