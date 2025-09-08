@@ -951,6 +951,7 @@ require("lazy").setup({
   require "custom.plugins.vim-visual-multi",
   require "custom.plugins.dadbod",
   require "custom.plugins.git-conflict",
+  require "custom.plugins.nvim-ufo",
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
