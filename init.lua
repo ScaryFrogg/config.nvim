@@ -118,11 +118,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function() vim.highlight.on_yank() end,
 })
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    group = vim.api.nvim_create_augroup("EslintFixOnSave", { clear = true }),
-    pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
-    command = "silent! EslintFixAll", -- Requires EslintFixAll to be available
-  })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("EslintFixOnSave", { clear = true }),
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
+  command = "silent! EslintFixAll", -- Requires EslintFixAll to be available
+})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -597,41 +597,13 @@ require("lazy").setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-      local data_path = vim.fn.stdpath "data"
-      local location = data_path .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+      -- local data_path = vim.fn.stdpath "data"
+      -- local location = data_path .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
       local servers = {
         gopls = {},
         tailwindcss = {},
-        volar = {
-          filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-          init_options = {
-            plugins = {
-              -- Global install of typescript
-              name = "@vue/typescript-plugin",
-              location = location,
-              languages = { "javascript", "typescript", "vue" },
+        volar = {},
 
-              -- tsdk = '~/.nvm/versions/node/v18.20.3/lib/node_modules/typescript',
-            },
-          },
-        },
-        ts_ls = {},
-        -- tsserver = {
-        --   init_options = {
-        --     plugins = {
-        --       {
-        --         name = '@vue/typescript-plugin',
-        --         location = '/home/vjn/.nvm/versions/node/v22.2.0/lib/node_modules/@vue/typescript-plugin/',
-        --         languages = { 'javascript', 'typescript', 'vue' },
-        --       },
-        --     },
-        --   },
-        --   filetypes = {
-        --     'javascript',
-        --     'typescript',
-        --     'vue',
-        --   },
-        -- },
         eslint = {
           cmd = { "vscode-eslint-language-server", "--stdio" },
           filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
@@ -658,6 +630,26 @@ require("lazy").setup({
           },
         },
       }
+
+      if vim.fn.has "win32" == 1 then
+        -- Code for Windows-specific configuration
+        servers.ts_ls = {}
+      else
+        -- Code for Linux specific configuration
+        servers.tsserver = {
+          init_options = {
+            plugins = {
+              {
+                name = "@vue/typescript-plugin",
+                location = vim.fn.stdpath "data"
+                  .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+                languages = { "vue" },
+              },
+            },
+          },
+          filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+        }
+      end
 
       -- Ensure the servers and tools above are installed
       --
@@ -953,6 +945,7 @@ require("lazy").setup({
   require "custom.plugins.dadbod",
   require "custom.plugins.git-conflict",
   require "custom.plugins.nvim-ufo",
+  require "custom.plugins.go-debugger",
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
