@@ -327,7 +327,16 @@ require("lazy").setup({
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
         },
-        -- pickers = {}
+        pickers = {
+          live_grep = {
+            file_ignore_patterns = { "node_modules", ".git", ".venv" },
+            additional_args = function(_) return { "--hidden" } end,
+          },
+          find_files = {
+            file_ignore_patterns = { "node_modules", ".git", ".venv" },
+            hidden = true,
+          },
+        },
         extensions = {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown(),
@@ -610,7 +619,6 @@ require("lazy").setup({
       local servers = {
         gopls = {},
         tailwindcss = {},
-        volar = {},
 
         eslint = {
           cmd = { "vscode-eslint-language-server", "--stdio" },
@@ -644,6 +652,7 @@ require("lazy").setup({
         servers.ts_ls = {}
       else
         -- Code for Linux specific configuration
+        servers.volar = {}
         servers.tsserver = {
           init_options = {
             plugins = {
@@ -954,6 +963,10 @@ require("lazy").setup({
   require "custom.plugins.git-conflict",
   require "custom.plugins.nvim-ufo",
   require "custom.plugins.go-debugger",
+
+  -- Load the explorer module
+
+  -- Define the keymap to call the function
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
