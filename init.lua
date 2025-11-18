@@ -118,11 +118,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = function() vim.highlight.on_yank() end,
 })
-vim.api.nvim_create_autocmd("BufWritePre", {
+--[[ vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("EslintFixOnSave", { clear = true }),
-  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
-  command = "silent! EslintFixAll", -- Requires EslintFixAll to be available
-})
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.vue" },
+  command = "EslintFixAll",
+}) ]]
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -476,6 +476,7 @@ require("lazy").setup({
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
           map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+          map("<leader>ww", function() vim.wo.wrap = not vim.wo.wrap end, "[W]ord [W]rap")
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -602,7 +603,7 @@ require("lazy").setup({
       local servers = {
         gopls = {},
         tailwindcss = {},
-        volar = {},
+        --volar = {},
 
         eslint = {
           cmd = { "vscode-eslint-language-server", "--stdio" },
