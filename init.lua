@@ -250,6 +250,7 @@ require("lazy").setup({
         { "<leader>w", group = "[W]orkspace" },
         { "<leader>t", group = "[T]oggle" },
         { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+        { "<leader>H", group = "[H]ttp client", mode = { "n" } },
       },
     },
   },
@@ -787,13 +788,14 @@ require("lazy").setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require "kickstart.plugins.gitsigns",
   require "kickstart.plugins.neo-tree",
   require "custom.plugins.vim-visual-multi",
   require "custom.plugins.dadbod",
   require "custom.plugins.git-conflict",
   require "custom.plugins.nvim-ufo",
   require "custom.plugins.go-debugger",
+  require "custom.plugins.http",
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
