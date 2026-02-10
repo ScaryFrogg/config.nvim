@@ -310,7 +310,7 @@ require("lazy").setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
-          path_display = { "smart" },
+          path_display = { "full" },
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
@@ -409,6 +409,10 @@ require("lazy").setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+      local capabilities = require("blink-cmp").get_lsp_capabilities()
+      vim.lsp.config("gopsl", {
+        capabilities = capabilities,
+      })
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
         callback = function(event)
@@ -546,7 +550,16 @@ require("lazy").setup({
       }
 
       require("mason-lspconfig").setup {
-        ensure_installed = { "gopls", "stylua", "lua_ls", "vue_ls", "vtsls", "eslint", "tailwindcss" },
+        ensure_installed = {
+          "gopls",
+          "stylua",
+          "lua_ls",
+          "vue_ls",
+          "vtsls",
+          "eslint",
+          "tailwindcss",
+          "docker_language_server",
+        },
         automatic_installation = true,
       }
     end,
@@ -796,6 +809,8 @@ require("lazy").setup({
   require "custom.plugins.nvim-ufo",
   require "custom.plugins.go-debugger",
   require "custom.plugins.http",
+  require "custom.plugins.snacks",
+  require "custom.plugins.markdown",
   --Windows machien plugins
   --require "custom.plugins.omnisharp",
 
